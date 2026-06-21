@@ -1,190 +1,171 @@
-# Poker EV Trainer
+# Poker EV Trainer v2.0
 
-一个适合新手的德州扑克 **EV（期望值）训练器**。  
-输入你的手牌、公共牌、底池和跟注金额，程序会用 **Monte Carlo 模拟** 计算胜率，并给出 **Call / Fold** 建议。
+A beginner-friendly **Texas Hold'em EV trainer** with Monte Carlo equity simulation, range analysis, and a simplified preflop advisor.
 
----
-
-## 功能
-
-- 输入 2 张手牌（例如 `Ah Ks`）
-- 输入 0–5 张公共牌（例如 `2h 7d Tc`，翻前可留空）
-- 输入底池大小和跟注金额
-- Monte Carlo 模拟计算 **Win % / Tie % / Lose %**
-- 输出 **Pot Odds、Required Equity、Call EV** 及建议
+Built with **Python + Streamlit + treys**. Runs locally on Windows and deploys to **Streamlit Community Cloud**.
 
 ---
 
-## 环境要求
+## Features (v2)
 
-- **Windows 10 / 11**
-- **Python 3.9 或更高版本**（推荐 3.10+）
+| Tab | Description |
+|-----|-------------|
+| **EV Calculator** | Hand + board + pot/call → Win/Tie/Lose %, pot odds, Call EV, Call/Fold decision |
+| **Range Analysis** | Hero vs Random / Tight / Standard / Loose villain ranges |
+| **Preflop Advisor** | Simplified GTO-inspired chart by position & scenario |
+| **How It Works** | Glossary and usage guide |
 
 ---
 
-## 第一步：检查 Python 是否已安装
+## Requirements
 
-打开 **PowerShell** 或 **命令提示符（CMD）**，输入：
+- **Windows 10 / 11** (or any OS with Python)
+- **Python 3.9+** (3.10+ recommended)
+
+---
+
+## Local Setup (Windows)
+
+### Step 1 — Check Python
 
 ```powershell
 python --version
 ```
 
-如果看到类似 `Python 3.11.x` 的输出，说明已安装，可跳到 **第二步**。
+Install from https://www.python.org/downloads/ if needed (check **Add Python to PATH**).
 
-如果提示找不到命令，请先到官网安装 Python：  
-https://www.python.org/downloads/
-
-> 安装时务必勾选 **"Add Python to PATH"**（添加到环境变量）。
-
----
-
-## 第二步：进入项目文件夹
-
-在终端中输入（请把路径改成你实际存放项目的位置）：
+### Step 2 — Go to project folder
 
 ```powershell
 cd "D:\poker project"
 ```
 
-确认当前目录下有这些文件：
-
-```powershell
-dir
-```
-
-应能看到：`app.py`、`requirements.txt`、`README.md`
-
----
-
-## 第三步：创建虚拟环境（推荐）
-
-虚拟环境可以隔离项目依赖，避免和其他 Python 项目冲突。
+### Step 3 — Create & activate virtual environment
 
 ```powershell
 python -m venv venv
-```
-
-激活虚拟环境：
-
-```powershell
 .\venv\Scripts\activate
 ```
 
-激活成功后，命令行前面会出现 `(venv)` 字样。
+You should see `(venv)` in your prompt.
 
----
-
-## 第四步：安装依赖
-
-确保仍在项目目录，且虚拟环境已激活（有 `(venv)` 前缀），然后输入：
+### Step 4 — Install dependencies
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-等待安装完成，应看到 `streamlit` 和 `treys` 安装成功。
-
----
-
-## 第五步：运行程序
+### Step 5 — Run the app
 
 ```powershell
 streamlit run app.py
 ```
 
-终端会显示类似：
+Open **http://localhost:8501** in your browser.
 
-```
-Local URL: http://localhost:8501
-```
-
-浏览器通常会自动打开；如果没有，请手动访问：**http://localhost:8501**
+Press **Ctrl + C** in the terminal to stop.
 
 ---
 
-## 第六步：停止程序
+## Testing Each Tab
 
-在运行程序的终端窗口按 **Ctrl + C** 即可停止。
+### EV Calculator
 
-下次使用时，只需重复：
+1. Hero Hand: `Ah Ks`
+2. Board: `2h 7d Tc` (leave blank for preflop)
+3. Pot Size: `100`, Call Amount: `50`
+4. Click **Calculate Equity & EV**
+5. Verify: Win/Tie/Lose metrics, equity bar, green **Call** or red **Fold**
+
+### Range Analysis
+
+1. Hero Hand: `Ah Ks`
+2. Board: leave blank or add flop
+3. Villain Range: try **Tight** vs **Loose**
+4. Click **Run Range Analysis**
+5. Compare effective equity — tighter ranges should show lower hero equity with marginal hands
+
+### Preflop Advisor
+
+1. Hand: `Ah Kh` (or `Ah Ks`)
+2. Position: **BTN**, Scenario: **First In**
+3. Click **Get Preflop Advice** → expect **Raise** for AK
+4. Try weak hand `7h 2d` from **UTG** → expect **Fold**
+
+### How It Works
+
+Read-only tab — confirm glossary and card format render correctly.
+
+---
+
+## Card Format
+
+| | |
+|---|---|
+| Ranks | `2 3 4 5 6 7 8 9 T J Q K A` |
+| Suits | `h`♥ `d`♦ `c`♣ `s`♠ |
+| Example | `Ah Ks` = Ace of hearts + King of spades |
+
+---
+
+## Deploy to Streamlit Cloud
+
+If the app is already live on Streamlit Community Cloud, push updates with git:
+
+### Step 1 — Check changes
 
 ```powershell
 cd "D:\poker project"
-.\venv\Scripts\activate
-streamlit run app.py
+git status
+git diff
 ```
 
----
+### Step 2 — Stage and commit
 
-## 使用示例
+```powershell
+git add app.py README.md requirements.txt
+git commit -m "Upgrade to v2: modern UI, range analysis, preflop advisor"
+```
 
-| 输入项 | 示例值 |
-|--------|--------|
-| 手牌 | `Ah Ks` |
-| 公共牌 | `2h 7d Tc` |
-| 底池 | `100` |
-| 跟注 | `50` |
+### Step 3 — Push to GitHub
 
-点击 **「计算胜率与 EV」** 后，页面会显示胜率、Pot Odds、Call EV 以及 Call / Fold 建议。
+```powershell
+git push origin main
+```
 
----
+> Replace `main` with your branch name if different (e.g. `master`).
 
-## 牌面格式说明
+Streamlit Cloud redeploys automatically within 1–3 minutes after push.
 
-| 含义 | 写法 |
-|------|------|
-| 点数 | `2 3 4 5 6 7 8 9 T J Q K A`（T = 10） |
-| 花色 | `h`=红桃 ♥　`d`=方块 ♦　`c`=梅花 ♣　`s`=黑桃 ♠ |
-| 示例 | `Ah` = 红桃 A，`Ks` = 黑桃 K |
+### First-time Streamlit Cloud setup
 
-手牌和公共牌之间用空格分隔，例如：`Ah Ks` 和 `2h 7d Tc`
-
----
-
-## 输出指标说明
-
-| 指标 | 含义 |
-|------|------|
-| **Win %** | 模拟中赢牌的概率 |
-| **Tie %** | 模拟中平局的概率 |
-| **Lose %** | 模拟中输牌的概率 |
-| **Pot Odds** | 底池赔率 = 跟注 / (底池 + 跟注) |
-| **Required Equity** | 跟注所需最低胜率（盈亏平衡点） |
-| **Call EV** | 跟注的期望值；≥ 0 建议 Call，< 0 建议 Fold |
+1. Push this repo to **GitHub**
+2. Go to https://share.streamlit.io
+3. **New app** → select repo → main file: `app.py`
+4. Deploy — no secrets needed for this project
 
 ---
 
-## 常见问题
-
-**Q：提示 `python` 不是内部或外部命令？**  
-A：Python 未加入 PATH，请重新安装并勾选 "Add Python to PATH"。
-
-**Q：提示 `streamlit` 不是内部或外部命令？**  
-A：先激活虚拟环境 `.\venv\Scripts\activate`，再运行 `pip install -r requirements.txt`。
-
-**Q：模拟很慢？**  
-A：在页面上把「模拟次数」调低（例如 5000），速度会更快，精度略降。
-
-**Q：翻前（没有公共牌）能算吗？**  
-A：可以。公共牌留空即可，程序会在模拟中随机发完 5 张公共牌。
-
----
-
-## 项目文件
+## Project Structure
 
 ```
 poker project/
-├── app.py              # 主程序（Streamlit 界面 + Monte Carlo 逻辑）
-├── requirements.txt    # Python 依赖
-├── README.md           # 本说明文档
-└── venv/               # 虚拟环境（运行第三步后自动生成）
+├── app.py              # Main app (UI + all logic)
+├── requirements.txt    # streamlit, treys
+├── README.md           # This file
+└── venv/               # Local virtual env (not committed)
 ```
 
 ---
 
-## 技术栈
+## Tech Stack
 
-- **Python** — 编程语言
-- **Streamlit** — 网页界面
-- **treys** — 德州扑克牌力计算
+- **Python** — core language
+- **Streamlit** — web UI
+- **treys** — hand evaluation
+
+---
+
+## Disclaimer
+
+Range Analysis and Preflop Advisor use **simplified models** for learning purposes. They are not full GTO solver outputs. Use EV Calculator results as estimates — accuracy improves with more Monte Carlo iterations.
